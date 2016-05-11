@@ -1,5 +1,13 @@
 # bots-twitter-python
 
+Modules: 
+* tweepy
+* configparser
+* smtplib
+
+bot_twitter_topics.py: 
+bot_twitter_users.py
+
 This project needs a properties file:
 
 bot.properties
