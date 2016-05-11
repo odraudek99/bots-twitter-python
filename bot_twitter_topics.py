@@ -11,7 +11,7 @@ import smtplib
 
 
 config = configparser.RawConfigParser()
-config.read('/home/odraudek99/config.properties')
+config.read('bot.properties')
 
 password= config.get('correo', 'password')
 correoSalida= config.get('correo', 'correoSalida')
@@ -24,6 +24,8 @@ access_token = config.get('twitter', 'access_token')
 access_token_secret = config.get('twitter', 'access_token_secret')
 resultados = config.get('twitter', 'resultados')
 
+query =config.get('twitter','query')
+
 # OAuth process, using the keys and tokens
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 
@@ -33,7 +35,7 @@ try:
     auth.set_access_token(access_token, access_token_secret)
     api = tweepy.API(auth)
     
-    search_results = api.search(q="linea12 OR linea dorada OR lineaDorada", count=resultados)
+    search_results = api.search(q=query, count=resultados)
     
     for i in search_results:
         mensaje_correo+=(str(i.created_at)+'\n')
