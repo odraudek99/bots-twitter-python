@@ -1,7 +1,7 @@
 # bots-twitter-python
 
 This project needs a properties file.
-/home/odraudek99/config.properties
+bot.properties
 Example
 ```
 
