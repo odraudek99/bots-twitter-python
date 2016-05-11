@@ -1,7 +1,9 @@
 # bots-twitter-python
 
-This project needs a properties file.
+This project needs a properties file:
+
 bot.properties
+
 Example
 ```
 
