@@ -11,11 +11,8 @@ import smtplib
 from datetime import datetime, timedelta
 
 
-logging.basicConfig(filename='bot_users.log',level=logging.INFO)
-logging.debug('This message should go to the log file')
-logging.info('So should this')
-logging.warning('And this, too')
-
+logging.basicConfig(filename='log_bot_users.log',level=logging.INFO)
+logging.info('init bot users')
 
 config = ConfigParser.RawConfigParser()
 config.read('bot.properties')
