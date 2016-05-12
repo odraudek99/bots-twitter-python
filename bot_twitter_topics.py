@@ -3,12 +3,15 @@ Created on May 5, 2016
 
 @author: odraudek99
 '''
-
+import logging
 import tweepy
 import configparser
 import smtplib
 #from tweepy.auth import OAuthHandler
 
+logging.basicConfig(filename='log_bot_topics.log',level=logging.INFO)
+
+logging.info('Init: bot_twitter_topics.py')
 
 config = configparser.RawConfigParser()
 config.read('bot.properties')
@@ -26,6 +29,8 @@ resultados = config.get('twitter', 'resultados')
 
 query =config.get('twitter','query')
 
+logging.info('query: '+query)
+
 # OAuth process, using the keys and tokens
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 
@@ -42,7 +47,7 @@ try:
         mensaje_correo+=(i.user.screen_name+'\n')
         mensaje_correo+=(i.text+'\n\n')
     
-    print (mensaje_correo)
+    #print (mensaje_correo)
     
     mensaje_correo=mensaje_correo.encode('utf-8') 
     
@@ -57,8 +62,8 @@ try:
     server.quit()
 
 except tweepy.TweepError as e:
-    print (e)
-    print ('Error! Failed to get request token.')
+    logging.error('error: '+ e)
+    logging.error ('Error! Failed to get request token.')
     
     
     
