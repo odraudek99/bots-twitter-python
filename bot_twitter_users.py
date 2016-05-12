@@ -3,12 +3,19 @@ Created on May 5, 2016
 
 @author: odraudek99
 '''
-
+import logging
 import tweepy
 import ConfigParser
 import smtplib
 
 from datetime import datetime, timedelta
+
+
+logging.basicConfig(filename='bot_users.log',level=logging.INFO)
+logging.debug('This message should go to the log file')
+logging.info('So should this')
+logging.warning('And this, too')
+
 
 config = ConfigParser.RawConfigParser()
 config.read('bot.properties')
@@ -25,7 +32,7 @@ access_token_secret = config.get('twitter', 'access_token_secret')
 resultados = config.get('twitter', 'resultados')
 
 usuarios = config.get('twitter', 'usuarios')
-
+horas=config.get('twitter','horas')
 # OAuth process, using the keys and tokens
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 
@@ -42,7 +49,7 @@ try:
         mensaje_correo +='------> '+usr+'\n'
         usuario = api.get_user(usr)   
         status_list = api.user_timeline(screen_name = usr, include_rts = True, count=13)
-        nine_hours_from_now = datetime.now() + timedelta(hours=4)
+        nine_hours_from_now = datetime.now() - timedelta(hours=int(horas))
         
         for status in status_list:
             
@@ -53,6 +60,7 @@ try:
            
         print('\n') 
 
+    print (mensaje_correo)
     server = smtplib.SMTP('smtp.gmail.com:587')
     server.starttls()
     server.login(correoSalida,password)
