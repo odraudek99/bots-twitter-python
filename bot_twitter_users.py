@@ -3,12 +3,16 @@ Created on May 5, 2016
 
 @author: odraudek99
 '''
-
+import logging
 import tweepy
 import ConfigParser
 import smtplib
 
 from datetime import datetime, timedelta
+
+logging.basicConfig(filename='log_bot_topics.log',level=logging.INFO)
+
+logging.info('Init: bot_twitter_users.py')
 
 config = ConfigParser.RawConfigParser()
 config.read('bot.properties')
@@ -38,7 +42,7 @@ try:
     for usr in usuarios.split(","):
     
         usr = usr.strip()
-        print(usr)
+        logging.info(usr)
         mensaje_correo +='------> '+usr+'\n'
         usuario = api.get_user(usr)   
         status_list = api.user_timeline(screen_name = usr, include_rts = True, count=13)
@@ -48,10 +52,10 @@ try:
             
             if status.created_at >= nine_hours_from_now:
             
-                print (str(status.created_at)+':\n'+status.text)
+                logging.info (str(status.created_at)+':\n'+status.text)
                 mensaje_correo +=(str(status.created_at)+':\n'+status.text)+'\n\n'
            
-        print('\n') 
+        logging.info('\n') 
 
     server = smtplib.SMTP('smtp.gmail.com:587')
     server.starttls()
@@ -65,8 +69,8 @@ try:
     server.quit()
 
 except tweepy.TweepError as e:
-    print (e)
-    print ('Error! Failed to get request token.')
+    logging.error (e)
+    logging.error ('Error! Failed to get request token.')
     
     
     
