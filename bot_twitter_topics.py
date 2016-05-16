@@ -51,7 +51,7 @@ try:
     
     mensaje_correo=mensaje_correo.encode('utf-8') 
     
-    message = 'Subject: %s\n\n%s' % ('SUBJECT', mensaje_correo)
+    message = 'Subject: %s\n\n%s' % ('LINEA 12', mensaje_correo)
     
     server = smtplib.SMTP('smtp.gmail.com:587')
     server.starttls()

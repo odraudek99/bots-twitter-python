@@ -64,7 +64,7 @@ try:
     
     mensaje_correo=mensaje_correo.encode('utf-8') 
     
-    message = 'Subject: %s\n\n%s' % ('SUBJECT', mensaje_correo)
+    message = 'Subject: %s\n\n%s' % ('USUARIOS', mensaje_correo)
     
     server.sendmail('Eduardo G', correoDestino, message)
     server.quit()
