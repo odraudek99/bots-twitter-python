@@ -5,15 +5,16 @@ Created on May 5, 2016
 '''
 import logging
 import tweepy
-import configparser
+import ConfigParser
 import smtplib
-#from tweepy.auth import OAuthHandler
+
+from datetime import datetime, timedelta
 
 logging.basicConfig(filename='log_bot_topics.log',level=logging.INFO)
 
 logging.info('Init: bot_twitter_topics.py')
 
-config = configparser.RawConfigParser()
+config = ConfigParser.RawConfigParser()
 config.read('bot.properties')
 
 password= config.get('correo', 'password')
@@ -26,7 +27,7 @@ consumer_secret = config.get('twitter', 'consumer_secret')
 access_token = config.get('twitter', 'access_token')
 access_token_secret = config.get('twitter', 'access_token_secret')
 resultados = config.get('twitter', 'resultados')
-
+horas=config.get('twitter','horas')
 query =config.get('twitter','query')
 
 logging.info('query: '+query)
@@ -42,16 +43,19 @@ try:
     
     search_results = api.search(q=query, count=resultados)
     
+    hours_from_now = datetime.now() - timedelta(hours=int(horas))
+    
     for i in search_results:
-        mensaje_correo+=(str(i.created_at)+'\n')
-        mensaje_correo+=(i.user.screen_name+'\n')
-        mensaje_correo+=(i.text+'\n\n')
+        if i.created_at >=  hours_from_now:
+            mensaje_correo+=(str(i.created_at)+'\n')
+            mensaje_correo+=(i.user.screen_name+'\n')
+            mensaje_correo+=(i.text+'\n\n')
     
     #print (mensaje_correo)
     
     mensaje_correo=mensaje_correo.encode('utf-8') 
     
-    message = 'Subject: %s\n\n%s' % ('LINEA 12', mensaje_correo)
+    message = 'Subject: %s\n\n%s' % ('LINEA 12: '+datetime.now(), mensaje_correo)
     
     server = smtplib.SMTP('smtp.gmail.com:587')
     server.starttls()

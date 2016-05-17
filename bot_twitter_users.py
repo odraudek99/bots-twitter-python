@@ -29,7 +29,7 @@ access_token_secret = config.get('twitter', 'access_token_secret')
 resultados = config.get('twitter', 'resultados')
 
 usuarios = config.get('twitter', 'usuarios')
-horas=config.get('twitter','horas')
+horas=config.get('twitter','horasusr')
 # OAuth process, using the keys and tokens
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 
@@ -46,11 +46,11 @@ try:
         mensaje_correo +='------> '+usr+'\n'
         usuario = api.get_user(usr)   
         status_list = api.user_timeline(screen_name = usr, include_rts = True, count=13)
-        nine_hours_from_now = datetime.now() - timedelta(hours=int(horas))
+        hours_from_now = datetime.now() - timedelta(hours=int(horas))
         
         for status in status_list:
             
-            if status.created_at >= nine_hours_from_now:
+            if status.created_at >= hours_from_now:
             
                 print (str(status.created_at)+':\n'+status.text)
                 mensaje_correo +=(str(status.created_at)+':\n'+status.text)+'\n\n'
@@ -64,7 +64,7 @@ try:
     
     mensaje_correo=mensaje_correo.encode('utf-8') 
     
-    message = 'Subject: %s\n\n%s' % ('USUARIOS', mensaje_correo)
+    message = 'Subject: %s\n\n%s' % ('USUARIOS '+str(datetime.now()), mensaje_correo)
     
     server.sendmail('Eduardo G', correoDestino, message)
     server.quit()
