@@ -7,10 +7,14 @@ import logging
 import tweepy
 import ConfigParser
 import smtplib
+import sys
 
 from datetime import datetime, timedelta
 
-logging.basicConfig(filename='log_bot_topics.log',level=logging.INFO)
+topic = sys.argv[1]
+query = sys.argv[2]
+
+logging.basicConfig(filename=str('log_bot_topic_'+topic+'.log'),level=logging.INFO)
 
 logging.info('Init: bot_twitter_topics.py')
 
@@ -28,7 +32,8 @@ access_token = config.get('twitter', 'access_token')
 access_token_secret = config.get('twitter', 'access_token_secret')
 resultados = config.get('twitter', 'resultados')
 horas=config.get('twitter','horas')
-query =config.get('twitter','query')
+
+
 
 logging.info('query: '+query)
 
@@ -55,7 +60,7 @@ try:
     
     mensaje_correo=mensaje_correo.encode('utf-8') 
     
-    message = 'Subject: %s\n\n%s' % ('LINEA 12: '+str(datetime.now()), mensaje_correo)
+    message = 'Subject: %s\n\n%s' % ('Topic: '+topic+' '+str(datetime.now()), mensaje_correo)
     
     server = smtplib.SMTP('smtp.gmail.com:587')
     server.starttls()
@@ -66,7 +71,8 @@ try:
     server.quit()
 
 except tweepy.TweepError as e:
-    logging.error('error: '+ e)
+    logging.error('error: ')
+    logging.error(e)
     logging.error ('Error! Failed to get request token.')
     
     
