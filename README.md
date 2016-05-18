@@ -11,8 +11,8 @@ bot_twitter_users.py
 #crontab
 For execute each bot you need add two lines on the crontab:
 
-30 7,17 * * * sh /home/odraudek99/bots/ejecuta_bot_linea12.sh
-30 9,12,14,19,22 * * * sh /home/odraudek99/bots/ejecuta_bot_users.sh
+*30 7,17 * * * sh /home/odraudek99/bots/ejecuta_bot_linea12.sh
+*30 9,12,14,19,22 * * * sh /home/odraudek99/bots/ejecuta_bot_users.sh
 
 
 
