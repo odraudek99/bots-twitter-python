@@ -11,10 +11,7 @@ For execute each bot you need add two lines on the crontab:
 
 
 
-
-This project needs a properties file:
-
-bot.properties
+# Properties file: bot.properties
 
 Example
 ```
