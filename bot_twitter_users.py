@@ -3,6 +3,7 @@ Created on May 5, 2016
 
 @author: odraudek99
 '''
+import traceback
 import logging
 import tweepy
 import ConfigParser
@@ -11,7 +12,18 @@ import smtplib
 from datetime import datetime, timedelta
 
 
-logging.basicConfig(filename='log_bot_users.log',level=logging.INFO)
+def getString (status) :
+	try:
+		mensaje=(str(status.created_at)+':\n'+status.text)+'\n\n'
+		return mensaje.encode('utf-8')
+	except Exception as e:
+		logging.error(e)
+    		traceback.print_exc()
+    		traceback.print_exc(file=open("errlog.txt","a"))
+		return ""
+
+
+logging.basicConfig(filename='log_bot_users.log',format = "%(levelname) -10s %(asctime)s %(module)s:%(lineno)s %(funcName)s %(message)s",level=logging.INFO)
 logging.info('init bot users')
 
 config = ConfigParser.RawConfigParser()
@@ -34,7 +46,7 @@ horas=config.get('twitter','horasusr')
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 
 mensaje_correo=""
-
+mensaje=""
 try:
     auth.set_access_token(access_token, access_token_secret)
     api = tweepy.API(auth)
@@ -43,7 +55,8 @@ try:
     
         usr = usr.strip()
         print(usr)
-        mensaje_correo +='------> '+usr+'\n'
+	mensaje = '------> '+usr+'\n'
+        mensaje_correo +=mensaje.encode('utf-8')
         usuario = api.get_user(usr)   
         status_list = api.user_timeline(screen_name = usr, include_rts = True, count=13)
         hours_from_now = datetime.now() - timedelta(hours=int(horas))
@@ -52,8 +65,9 @@ try:
             
             if status.created_at >= hours_from_now:
             
-                print (str(status.created_at)+':\n'+status.text)
-                mensaje_correo +=(str(status.created_at)+':\n'+status.text)+'\n\n'
+                logging.info (str(status.created_at)+':\n'+status.text)
+		mensaje=getString(status)
+                mensaje_correo +=mensaje.encode('utf-8')
            
         print('\n') 
 
@@ -63,6 +77,8 @@ try:
     server.login(correoSalida,password)
     
     mensaje_correo=mensaje_correo.encode('utf-8') 
+    #mensaje_correo=unicode(mensaje_correo.decode('utf-8'))
+    #mensaje_correo=mensaje_correo.decode('unicode_escape').encode('ascii','ignore')
     
     message = 'Subject: %s\n\n%s' % ('USUARIOS '+str(datetime.now()), mensaje_correo)
     
@@ -70,9 +86,11 @@ try:
     server.quit()
 
 except tweepy.TweepError as e:
-    print (e)
+    logging.error(e)
     print ('Error! Failed to get request token.')
     
-    
-    
+except Exception as e:
+    logging.error(e)    
+    traceback.print_exc()    
+    traceback.print_exc(file=open("errlog.txt","a"))
     
