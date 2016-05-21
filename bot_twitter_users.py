@@ -8,13 +8,15 @@ import logging
 import tweepy
 import ConfigParser
 import smtplib
+import unicodedata
 
 from datetime import datetime, timedelta
 
 
 def getString (status) :
 	try:
-		mensaje=(str(status.created_at)+':\n'+status.text)+'\n\n'
+		msgUnicode = unicodedata.normalize('NFKD', status.text).encode('ascii','ignore')
+		mensaje=str(status.created_at)+':\n'+ str(msgUnicode) +'\n\n'
 		return mensaje.encode('utf-8')
 	except Exception as e:
 		logging.error(e)
